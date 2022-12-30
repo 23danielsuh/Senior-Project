@@ -1,4 +1,4 @@
-\*\*Main programming task:
+**Main programming task:**
 
 - Create a moving catcher/hoop, such that when throwing a ball, the hoop moves to catch the ball
 - Programming Subtasks:
@@ -15,7 +15,6 @@
 
   - Input: A coordinate pair (x, y) on the wall
   - Output: Motor controls to move to (x, y)
-
 - How to approach each Subtask
 
 1. Subtask A
@@ -31,5 +30,3 @@
 1. Subtask C
 
 - ???
-
-\*\*
