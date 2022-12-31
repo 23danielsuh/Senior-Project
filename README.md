@@ -2,6 +2,6 @@
 
 For sake of git workflow in PRs
 
-[subtask branch] --> develop (review branch) --> main
+[subtask branch] --> main (review branch) --> master
 
-Create any subtask branch from develop as it is likely commits ahead of main
+Create any subtask branch from main as it is likely commits ahead of master
