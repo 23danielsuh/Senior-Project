@@ -64,3 +64,5 @@ target/
 
 # Notebook Checkpoints
 .ipynb_checkpoints/
+
+EV3_CARD_IMAGE/
