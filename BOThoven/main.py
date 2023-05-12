@@ -1,6 +1,6 @@
-#from adafruit_servokit import ServoKit
+from adafruit_servokit import ServoKit
 
-#kit = ServoKit(channels=16)
+kit = ServoKit(channels=16)
 
 import music21 as m
 
@@ -10,7 +10,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 import time
 
-BPM = 60
+BPM = 120
+ANGLE = 30
 
 class Robot:
 
@@ -25,6 +26,8 @@ class Robot:
     def move_motor(self, motorID):
 
         print("Moving motor " + str(motorID))
+        
+        kit.servo[motorID].angle = ANGLE
 
     def play_note(self, note):
 
@@ -32,9 +35,9 @@ class Robot:
 
     def release(self, motorID, duration):
 
-        time.sleep(duration - 0.05)
-
         print("Returning motor " + str(motorID))
+        
+        kit.servo[motorID].angle = 0
 
 def open_file(xml_path):
 
@@ -87,49 +90,75 @@ def get_white_keys(min_pitch, max_pitch):
 
     return white_keys
 
-def main():
+def playNotes(part, robot):  
+    whiteKeys = get_white_keys(get_pitch_boundaries(part)[0], get_pitch_boundaries(part)[1])
+    print(whiteKeys)
+    
+    beats = []
+    for temp in part.recurse():
+        beats.append(temp)
+        print(temp)
 
+    for i, el in enumerate(beats):  
+        print(el)
+        if i < len(beats) - 1 and type(beats[i]) == stream.Measure and type(beats[i + 1]) == stream.Measure:
+            print(f'RUNNING ON {part}')
+            time.sleep((beats[i + 1].getOffsetInHierarchy(part) - beats[i].getOffsetInHierarchy(part)) * (60 / BPM))
+            continue
+        
+        if type(el) == note.Note:
+            pitch = el.pitch.ps
+
+            duration = el.duration.quarterLength * (60 / BPM)
+            
+            robot.play_note(whiteKeys.index(str(el.pitch.name) + str(el.pitch.octave)))
+            
+            print("Playing " + (el.pitch.name) + str(el.pitch.octave))
+            
+            time.sleep(duration - 0.075)
+
+            robot.release(whiteKeys.index(str(el.pitch.name) + str(el.pitch.octave)), duration)
+
+            time.sleep(0.075)
+                
+        if type(el) == chord.Chord:
+            print('WOEIJFOIJEFOIJEWFOIJWEOIFJWEOIJFOWEIJFOIJWEFO')
+
+            for x in el._notes:
+
+                pitch = x.pitch.ps
+
+                duration = x.duration.quarterLength * (60 / BPM)
+                
+                robot.play_note(whiteKeys.index(str(x.pitch.name) + str(x.pitch.octave)))
+                
+                print("Playing " + (x.pitch.name) + str(x.pitch.octave))
+
+            time.sleep(duration - 0.075)
+            
+            for x in el._notes:
+                robot.release(whiteKeys.index(str(x.pitch.name) + str(x.pitch.octave)), duration)
+            time.sleep(0.075)
+
+        elif type(el) == note.Rest:
+            duration = el.duration.quarterLength * (60 / BPM)
+            time.sleep(duration)
+            print(f"Resting for {duration} seconds")
+
+def main():
     robot = Robot(60)
 
-    song = open_file("/Users/benpomeranets/Documents/GitHub/senior_project/data/twinkle.xml")
+    song = open_file("../data/difficult_test.xml")
     
     song = song.stripTies()
-
-    whiteKeys = get_white_keys(get_pitch_boundaries(song)[0], get_pitch_boundaries(song)[1])
-
-    print(whiteKeys)
-
-    def playNotes():
-
-        for note in song.recurse().notes:
-
-            if note.isNote:
-
-                pitch = note.pitch.ps
-
-                duration = note.duration.quarterLength * (60 / BPM)
-                
-                robot.play_note(whiteKeys.index(str(note.pitch.name) + str(note.pitch.octave)))
-
-                robot.release(whiteKeys.index(str(note.pitch.name) + str(note.pitch.octave)), duration)
-
-                time.sleep(duration)
-
-            if note.isChord:
-
-                for x in note._notes:
-
-                    pitch = x.pitch.ps
-
-                    duration = x.duration.quarterLength * (60 / BPM)
-
-                    robot.play_note(pitch)
-
-                    robot.release(pitch - 60, duration)
-
-                time.sleep(duration)
     
-    playNotes()
-
+    song = song.voicesToParts()
+        
+    with ThreadPoolExecutor() as executor:
+        for part in song.getElementsByClass("Part"):
+            
+            print(part.show('T'))
+            a = executor.submit(playNotes, part, robot)
+            
 if __name__ == "__main__":
     main()
