@@ -47,52 +47,28 @@ def open_file(xml_path):
 
     return right_hand
 
-def get_pitch_boundaries(song):
+def get_keys(min_pitch, max_pitch):
 
-    lowestPitch = 60
-    
-    highestPitch = 60
-
-    for note in song.recurse().notes:
-
-        if note.isNote:
-
-            if note.pitch.ps < lowestPitch:
-
-                lowestPitch = note.pitch.ps
-            
-            elif note.pitch.ps > highestPitch:
-
-                highestPitch = note.pitch.ps
-        
-        elif note.isChord:
-
-            for x in note._notes:
-
-                if x.pitch.ps < lowestPitch:
-
-                    lowestPitch = x.pitch.ps
-            
-                elif x.pitch.ps > highestPitch:
-
-                    highestPitch = x.pitch.ps
-        
-    return [lowestPitch, highestPitch]
-
-def get_white_keys(min_pitch, max_pitch):
-
-    pitch_range = range(int(min_pitch), int(max_pitch) + 1)
+    pitch_range = range(min_pitch, max_pitch)
 
     pitches = [pitch.Pitch(p) for p in pitch_range]
+    
+    for i, x in reversed(list(enumerate(pitches))):
+        if pitches[i].name == "E" and pitches[i+1].name == "F" and i > 0:
+            pitches.insert(i+1, "FILLER")
+            
+        if pitches[i].name == "B" and pitches[i+1].name == "C" and i > 0:
+            pitches.insert(i+1, "FILLER")
+    
+    pitches = [str(p) for p in pitches]
+            
+    print(pitches)
 
-    # Filter out all the non-white keys
-    white_keys = [str(p) for p in pitches if str(p.accidental) == "natural"]
-
-    return white_keys
+    return pitches
 
 def playNotes(part, robot):  
-    whiteKeys = get_white_keys(get_pitch_boundaries(part)[0], get_pitch_boundaries(part)[1])
-    print(whiteKeys)
+    keys = get_keys(36, 85)
+    print(keys)
     
     beats = []
     for temp in part.recurse():
@@ -111,13 +87,13 @@ def playNotes(part, robot):
 
             duration = el.duration.quarterLength * (60 / BPM)
             
-            robot.play_note(whiteKeys.index(str(el.pitch.name) + str(el.pitch.octave)))
+            robot.play_note(keys.index(str(el.pitch.name) + str(el.pitch.octave)) - robot.left_arm_position)
             
             print("Playing " + (el.pitch.name) + str(el.pitch.octave))
             
             time.sleep(duration - 0.075)
 
-            robot.release(whiteKeys.index(str(el.pitch.name) + str(el.pitch.octave)), duration)
+            robot.release(keys.index(str(el.pitch.name) + str(el.pitch.octave)) - robot.left_arm_position, duration)
 
             time.sleep(0.075)
                 
@@ -130,14 +106,14 @@ def playNotes(part, robot):
 
                 duration = x.duration.quarterLength * (60 / BPM)
                 
-                robot.play_note(whiteKeys.index(str(x.pitch.name) + str(x.pitch.octave)))
+                robot.play_note(keys.index(str(x.pitch.name) + str(x.pitch.octave)) - robot.left_arm_position)
                 
                 print("Playing " + (x.pitch.name) + str(x.pitch.octave))
 
             time.sleep(duration - 0.075)
             
             for x in el._notes:
-                robot.release(whiteKeys.index(str(x.pitch.name) + str(x.pitch.octave)), duration)
+                robot.release(keys.index(str(x.pitch.name) + str(x.pitch.octave)) - robot.left_arm_position, duration)
             time.sleep(0.075)
 
         elif type(el) == note.Rest:
@@ -146,7 +122,7 @@ def playNotes(part, robot):
             print(f"Resting for {duration} seconds")
 
 def main():
-    robot = Robot(60)
+    robot = Robot(get_keys(36, 85).index("C4"))
 
     song = open_file("../data/difficult_test.xml")
     
@@ -156,9 +132,8 @@ def main():
         
     with ThreadPoolExecutor() as executor:
         for part in song.getElementsByClass("Part"):
-            
-            print(part.show('T'))
             a = executor.submit(playNotes, part, robot)
+            print(a.result())
             
 if __name__ == "__main__":
     main()
