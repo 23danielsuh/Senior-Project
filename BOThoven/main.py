@@ -17,12 +17,13 @@ import tkinter as tk
 import tkinter.font as TkFont
 from tkinter import filedialog
 from tkinter import *
+import tkinter.simpledialog
 
 from tkinter import ttk
 
 BPM = 90
 ANGLE = 30
-selected_file = "../data/beethoven_fur_elise.mxl"
+selected_file = "../data/beethoven_fur_elise.mxl" 
 d = {}
 name_of_song = None
 
@@ -34,10 +35,10 @@ class Robot:
 
     def __init__(self, init_left_position):
         for i in range(0, 6):
-            kit.servo[i].angle = 0
+            kit.servo[i].angle = ANGLE
             
         for i in range(6, 12):
-            kit.servo[i].angle = 30
+            kit.servo[i].angle = 0
         self.left_arm_position = init_left_position
 
     def move_motor(self, motorID, accidental, window):
@@ -54,9 +55,9 @@ class Robot:
 
         #print('made it here')
         if motorID >= 0 and motorID <= 5:
-            kit.servo[int(motorID)].angle = ANGLE
-        else:
             kit.servo[int(motorID)].angle = 0
+        else:
+            kit.servo[int(motorID)].angle = ANGLE
 
         #print(type(motorID))
         #print(motorID)
@@ -87,9 +88,9 @@ class Robot:
         
         
         if motorID >= 0 and motorID <= 5:
-            kit.servo[int(motorID)].angle = 0
-        else:
             kit.servo[int(motorID)].angle = ANGLE
+        else:
+            kit.servo[int(motorID)].angle = 0
 
 
 
