@@ -4,11 +4,15 @@ kit = ServoKit(channels=16)
 
 import music21 as m
 
+import os
+
 from music21 import *
 
 from concurrent.futures import ThreadPoolExecutor
 
 import time
+
+import tkinter as tk
 
 BPM = 120
 ANGLE = 30
@@ -25,7 +29,7 @@ class Robot:
 
     def move_motor(self, motorID):
 
-        print("Moving motor " + str(motorID))
+        #print("Moving motor " + str(motorID))
         
         kit.servo[motorID].angle = ANGLE
 
@@ -35,9 +39,14 @@ class Robot:
 
     def release(self, motorID, duration):
 
-        print("Returning motor " + str(motorID))
+        #print("Returning motor " + str(motorID))
         
         kit.servo[motorID].angle = 0
+        
+    def translate(self, position):
+        self.left_arm_position = position
+        #print('moving to position', position)
+    
 
 def open_file(xml_path):
 
@@ -78,7 +87,6 @@ def playNotes(part, robot):
     for i, el in enumerate(beats):  
         print(el)
         if i < len(beats) - 1 and type(beats[i]) == stream.Measure and type(beats[i + 1]) == stream.Measure:
-            print(f'RUNNING ON {part}')
             time.sleep((beats[i + 1].getOffsetInHierarchy(part) - beats[i].getOffsetInHierarchy(part)) * (60 / BPM))
             continue
         
@@ -98,8 +106,6 @@ def playNotes(part, robot):
             time.sleep(0.075)
                 
         if type(el) == chord.Chord:
-            print('WOEIJFOIJEFOIJEWFOIJWEOIFJWEOIJFOWEIJFOIJWEFO')
-
             for x in el._notes:
 
                 pitch = x.pitch.ps
@@ -129,11 +135,65 @@ def main():
     song = song.stripTies()
     
     song = song.voicesToParts()
+    
+    def musicThread():
+        playNotes(part, robot)
+        
+    def windowThread():
+        os.environ["DISPLAY"] = ":0"
+        window = tk.Tk()
+        window.title("BOThoven UI")
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        
+        window.geometry(f"{screen_width}x{screen_height}")
+        
+        startNote = 24
+        endNote = 84
+        
+        xPos = 0
+                
+        canvas = tk.Canvas(window, width=screen_width, height=screen_height)
+        canvas.pack()
+        
+        keyWidth = 0
+        
+        keyHeight = 0
+        
+        for note in range(startNote, endNote + 1):
+            
+            x = xPos
+            
+            if note % 12 in [1, 3, 6, 8, 10]:
+            
+                color = 'black'
+                
+                keyWidth = 27
+                
+                keyHeight = 200
+            
+            else:
+                
+                color = 'white'
+                
+                keyWidth = 47
+                
+                keyHeight = 300
+                
+            canvas.create_rectangle(x, 0, x + xPos, keyHeight, fill=color, outline='black')
+            
+            xPos += keyWidth
+        
+        window.mainloop()    
         
     with ThreadPoolExecutor() as executor:
-        for part in song.getElementsByClass("Part"):
-            a = executor.submit(playNotes, part, robot)
-            print(a.result())
-            
+        #for part in song.getElementsByClass("Part"):
+            #a = executor.submit(musicThread)
+        
+        a = executor.submit(windowThread)        
+        print(a.result())
+    
+
 if __name__ == "__main__":
     main()
+    
