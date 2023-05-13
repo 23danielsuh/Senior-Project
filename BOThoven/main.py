@@ -74,7 +74,7 @@ def open_file(xml_path, play_left_hand):
     if play_left_hand:
         return file
     else:
-        return midi.getElementsByClass(stream.Part)[0]
+        return file.getElementsByClass(stream.Part)[0]
 
 
 def get_keys(min_pitch, max_pitch):
@@ -174,11 +174,20 @@ def playSong():
     d = {
         "Fur Elise": "../data/beethoven_fur_elise.mxl",
         "Twinkle Twinkle Little Star": "../data/mozart_twinkle.mxl",
-        "Difficult Test": "../data/test_difficult.mxl",
         "One Octave": "../data/test_one_octave.mxl",
+        "Moonlight Sonata Mvt. 1": "../data/beethoven_moonlight_1.mxl",
+        "Moonlight Sonata Mvt. 3": "../data/beethoven_moonlight_3.mxl",
+        "Nocturne Op. 9 No. 2": "../data/chopin_nocturne_9_2.mxl",
+        "Clair de Lune": "../data/debussy_clair_de_lune.mxl",
+        "Turkish March": "../data/mozart_turkish_march",
+        "Mary Had a Little Lamb": "../data/mary_had_a_little_lamb.mxl",
+        "Happy Birthday": "../data/happy_birthday.mxl",
+        "Canon in D": "../data/pachelbel_canon_d.mxl"
+        
     }
 
-    song = open_file(d[window.get_selected_song()], True)
+    print(window.get_selected_LH_bool())
+    song = open_file(d[window.get_selected_song()], window.get_selected_LH_bool())
     global BPM
     BPM = int(window.get_selected_bpm())
     song = song.stripTies()
@@ -233,8 +242,15 @@ class PianoWindow(tk.Tk):
         self.values = [
             "Fur Elise",
             "Twinkle Twinkle Little Star",
-            "Difficult Test",
             "One Octave",
+            "Moonlight Sonata Mvt. 1",
+            "Moonlight Sonata Mvt. 3",
+            "Nocturne Op. 9 No. 2",
+            "Clair de Lune",
+            "Turkish March",
+            "Mary Had a Little Lamb",
+            "Happy Birthday",
+            "Canon in D"
         ]
 
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
@@ -281,6 +297,13 @@ class PianoWindow(tk.Tk):
         self.spinbox = tk.Spinbox(
             BPM_FRAME, from_=30, to=240, textvariable=self.BPM_SPINBOX, wrap=False
         )
+        
+        self.LH = tk.BooleanVar(self)
+        
+        self.LH_radio = tk.Checkbutton(BPM_FRAME, text="Both Hands", variable=self.LH, bg="#D3D3D3")
+        self.LH_radio.pack(side="right")
+        
+        
         self.spinbox.pack(
             side="right",
             padx=int(5 * (self.winfo_screenwidth() / 1440)),
@@ -289,6 +312,7 @@ class PianoWindow(tk.Tk):
 
         self.bpm_label = tk.Label(BPM_FRAME, text="BPM:", bg="#D3D3D3")
         self.bpm_label.pack(side="left")
+        
 
         self.option_menu.pack(
             padx=5, pady=5, side="top"
@@ -315,7 +339,7 @@ class PianoWindow(tk.Tk):
 
         self.yPos = (
             (self.height - self.spinBoxBottom - self.whiteKeyHeight) / 2
-        ) - self.spinBoxBottom / 2
+        ) - self.whiteKeyHeight / 2
         self.blackKeyPos = []
 
         self.keyPos = []
@@ -374,6 +398,9 @@ class PianoWindow(tk.Tk):
 
     def get_selected_bpm(self):
         return self.BPM_SPINBOX.get()
+        
+    def get_selected_LH_bool(self):
+        return self.LH.get()
 
 
 window = PianoWindow(48, 84)
