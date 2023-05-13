@@ -1,6 +1,6 @@
-# from adafruit_servokit import ServoKit
+from adafruit_servokit import ServoKit
 
-# kit = ServoKit(channels=16)
+kit = ServoKit(channels=16)
 
 import music21 as m
 
@@ -33,6 +33,11 @@ class Robot:
     right_arm_position = 0
 
     def __init__(self, init_left_position):
+        for i in range(0, 6):
+            kit.servo[i].angle = 0
+            
+        for i in range(6, 12):
+            kit.servo[i].angle = 30
         self.left_arm_position = init_left_position
 
     def move_motor(self, motorID, accidental, window):
@@ -47,7 +52,15 @@ class Robot:
         else:
             window.canvas.itemconfig(str(int(motorID + 60)) + "A", fill="#C03A38")
 
-        # kit.servo[motorID].angle = ANGLE
+        #print('made it here')
+        if motorID >= 0 and motorID <= 5:
+            kit.servo[int(motorID)].angle = ANGLE
+        else:
+            kit.servo[int(motorID)].angle = 0
+
+        #print(type(motorID))
+        #print(motorID)
+        #kit.servo[motorID].angle = ANGLE
 
     def play_note(self, note, window, accidental):
         self.move_motor(note, accidental, window)
@@ -70,7 +83,14 @@ class Robot:
         else:
             window.canvas.itemconfig(str(int(motorID + 60)) + "A", fill="black")
 
-        # kit.servo[motorID].angle = 0
+        #kit.servo[motorID].angle = 0
+        
+        
+        if motorID >= 0 and motorID <= 5:
+            kit.servo[int(motorID)].angle = 0
+        else:
+            kit.servo[int(motorID)].angle = ANGLE
+
 
 
 def open_file(xml_path, play_left_hand):
@@ -185,7 +205,7 @@ def playSong():
         "Moonlight Sonata Mvt. 3": "../data/beethoven_moonlight_3.mxl",
         "Nocturne Op. 9 No. 2": "../data/chopin_nocturne_9_2.mxl",
         "Clair de Lune": "../data/debussy_clair_de_lune.mxl",
-        "Turkish March": "../data/mozart_turkish_march",
+        "Turkish March": "../data/mozart_turkish_march.mxl",
         "Mary Had a Little Lamb": "../data/mary_had_a_little_lamb.mxl",
         "Happy Birthday": "../data/happy_birthday.mxl",
         "Canon in D": "../data/pachelbel_canon_d.mxl",
