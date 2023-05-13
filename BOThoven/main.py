@@ -14,7 +14,9 @@ import time
 
 import tkinter as tk
 
-BPM = 80
+from tkinter import ttk
+
+BPM = 90
 ANGLE = 30
 
 
@@ -119,6 +121,9 @@ def playNotes(part, robot, window):
             continue
 
         if type(el) == note.Note:
+            print('sdlfksdflkjsdf', el.getGrace())
+            if el.duration.isGrace:
+                continue
             pitch = el.pitch.ps
             
             if pitch % 12 in [1, 3, 6, 8, 10]:
@@ -138,7 +143,7 @@ def playNotes(part, robot, window):
 
             print("Playing " + (el.pitch.name) + str(el.pitch.octave))
 
-            time.sleep(duration - 0.075)
+            time.sleep(max(0, duration - 0.075))
 
             robot.release(
                 pitch - 60,
@@ -160,9 +165,7 @@ def playNotes(part, robot, window):
                     accidental = "black"
                 else:
                     accidental = "natural"
-                    
-                #accidental = "natural"
-                
+                                    
                 duration = x.duration.quarterLength * (60 / BPM)
 
                 robot.play_note(
@@ -171,9 +174,16 @@ def playNotes(part, robot, window):
                     accidental
                 )
 
-            time.sleep(duration - 0.075)
+            time.sleep(max(0, duration - 0.075))
 
             for x in el._notes:
+                pitch = x.pitch.ps
+
+                if pitch % 12 in [1, 3, 6, 8, 10]:
+                    accidental = "black"
+                else:
+                    accidental = "natural"
+
                 robot.release(
                     x.pitch.ps - 60,
                     duration,
@@ -185,6 +195,8 @@ def playNotes(part, robot, window):
             time.sleep(0.075)
 
         elif type(el) == note.Rest:
+
+            duration = el.duration.quarterLength * (60 / BPM)
             time.sleep(duration)
             print(f"Resting for {duration} seconds")
 
@@ -280,19 +292,30 @@ class PianoWindow(tk.Tk):
                     outline="black",
                     tags=str(key[1]) + "A",
                 )
-
+                
+        border_width = 5
+        corner_radius = 10        
+        startX = (self.width - self.pianoWidth) / 2
+        self.canvas.create_rectangle(
+            startX,
+            self.yPos,
+            startX + self.pianoWidth,
+            self.yPos + self.whiteKeyHeight,
+            width=border_width,
+            outline='black'
+        )
 
 def main():
     robot = Robot(get_keys(36, 85).index("C4"))
     #song = open_file("../data/twinkle.xml")
     #song = open_file("../BOThoven/difficult_test.xml")
-    song = open_file("../data/fur_elise.mxl")
-    #song = open_file("../data/one_octave.mxl")
+    #song = open_file("../data/fur_elise.mxl")
+    song = open_file("../data/one_octave.mxl")
     song = song.stripTies()
     song = song.voicesToParts()
 
     with ThreadPoolExecutor() as executor:
-        window = PianoWindow(24, 84)
+        window = PianoWindow(48, 84)
         for part in song:
             a = executor.submit(playNotes, part, robot, window)
             #print(a.result())
