@@ -34,11 +34,25 @@ class Robot:
     right_arm_position = 0
 
     def __init__(self, init_left_position):
-        for i in range(0, 6):
-            kit.servo[i].angle = ANGLE
+        kit.servo[0].angle = 31
+        kit.servo[2].angle = 38
+        kit.servo[4].angle = 43
+        kit.servo[5].angle = 40
+        kit.servo[7].angle = 0
+        kit.servo[9].angle = 12
+        kit.servo[11].angle = 17
+        kit.servo[1].angle = 40
+        kit.servo[3].angle = 35
+        kit.servo[6].angle = 15
+        kit.servo[8].angle = 4
+        kit.servo[10].angle = 1
+
+        
+        #for i in range(0, 6):
+        #    kit.servo[i].angle = ANGLE
             
-        for i in range(6, 12):
-            kit.servo[i].angle = 0
+        #for i in range(6, 12):
+        #    kit.servo[i].angle = 0
         self.left_arm_position = init_left_position
 
     def move_motor(self, motorID, accidental, window):
@@ -54,10 +68,36 @@ class Robot:
             window.canvas.itemconfig(str(int(motorID + 60)) + "A", fill="#C03A38")
 
         #print('made it here')
-        if motorID >= 0 and motorID <= 5:
-            kit.servo[int(motorID)].angle = 0
-        else:
-            kit.servo[int(motorID)].angle = ANGLE
+        
+        if motorID == 0:
+            kit.servo[0].angle = 0
+        if motorID == 2:
+            kit.servo[2].angle = 16-10
+        if motorID == 4:
+            kit.servo[4].angle = 21-10
+        if motorID == 5:
+            kit.servo[5].angle = 18-10
+        if motorID == 7:
+            kit.servo[7].angle = 22+10
+        if motorID == 9:
+            kit.servo[9].angle = 36+10
+        if motorID == 11:
+            kit.servo[11].angle = 39+10
+        if motorID == 1:
+            kit.servo[1].angle = 25-10
+        if motorID == 3:
+            kit.servo[3].angle = 20-10
+        if motorID == 6:
+            kit.servo[6].angle = 30+10
+        if motorID == 8:
+            kit.servo[8].angle = 19+10
+        if motorID == 10:
+            kit.servo[10].angle = 16+10
+        
+        #if motorID >= 0 and motorID <= 5:
+        #    kit.servo[int(motorID)].angle = 0
+        #else:
+        #    kit.servo[int(motorID)].angle = ANGLE
 
         #print(type(motorID))
         #print(motorID)
@@ -86,11 +126,35 @@ class Robot:
 
         #kit.servo[motorID].angle = 0
         
+        if motorID == 0:
+            kit.servo[0].angle = 31
+        if motorID == 2:
+            kit.servo[2].angle = 38
+        if motorID == 4:
+            kit.servo[4].angle = 43
+        if motorID == 5:
+            kit.servo[5].angle = 40
+        if motorID == 7:
+            kit.servo[7].angle = 0
+        if motorID == 9:
+            kit.servo[9].angle = 12
+        if motorID == 11:
+            kit.servo[11].angle = 17
+        if motorID == 1:
+            kit.servo[1].angle = 40
+        if motorID == 3:
+            kit.servo[3].angle = 35
+        if motorID == 6:
+            kit.servo[6].angle = 25
+        if motorID == 8:
+            kit.servo[8].angle = 4
+        if motorID == 10:
+            kit.servo[10].angle = 1
         
-        if motorID >= 0 and motorID <= 5:
-            kit.servo[int(motorID)].angle = ANGLE
-        else:
-            kit.servo[int(motorID)].angle = 0
+        #if motorID >= 0 and motorID <= 5:
+        #    kit.servo[int(motorID)].angle = ANGLE
+        #else:
+        #    kit.servo[int(motorID)].angle = 0
 
 
 
@@ -210,6 +274,7 @@ def playSong():
         "Mary Had a Little Lamb": "../data/mary_had_a_little_lamb.mxl",
         "Happy Birthday": "../data/happy_birthday.mxl",
         "Canon in D": "../data/pachelbel_canon_d.mxl",
+        "Invention 13": "../data/bach_invention_13.mxl"
     }
     d[name_of_song] = selected_file
     print(d)
@@ -297,6 +362,7 @@ class PianoWindow(tk.Tk):
             "Mary Had a Little Lamb",
             "Happy Birthday",
             "Canon in D",
+            "Invention 13"
         ]
 
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
