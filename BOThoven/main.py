@@ -47,6 +47,7 @@ def open_file(xml_path):
 def get_pitch_boundaries(song):
 
     lowestPitch = 60
+    
     highestPitch = 60
 
     for note in song.recurse().notes:
@@ -76,10 +77,11 @@ def get_pitch_boundaries(song):
     return [lowestPitch, highestPitch]
 
 def get_white_keys(min_pitch, max_pitch):
-    # Create a range of pitches using music21's pitch class
+
     pitch_range = range(int(min_pitch), int(max_pitch) + 1)
+
     pitches = [pitch.Pitch(p) for p in pitch_range]
-    
+
     # Filter out all the non-white keys
     white_keys = [str(p) for p in pitches if str(p.accidental) == "natural"]
 
@@ -94,6 +96,7 @@ def main():
     song = song.stripTies()
 
     whiteKeys = get_white_keys(get_pitch_boundaries(song)[0], get_pitch_boundaries(song)[1])
+
     print(whiteKeys)
 
     def playNotes():
@@ -101,20 +104,27 @@ def main():
         for note in song.recurse().notes:
 
             if note.isNote:
+
                 pitch = note.pitch.ps
+
                 duration = note.duration.quarterLength * (60 / BPM)
                 
                 robot.play_note(whiteKeys.index(str(note.pitch.name) + str(note.pitch.octave)))
+
                 robot.release(whiteKeys.index(str(note.pitch.name) + str(note.pitch.octave)), duration)
 
                 time.sleep(duration)
 
             if note.isChord:
+
                 for x in note._notes:
+
                     pitch = x.pitch.ps
+
                     duration = x.duration.quarterLength * (60 / BPM)
 
                     robot.play_note(pitch)
+
                     robot.release(pitch - 60, duration)
 
                 time.sleep(duration)
