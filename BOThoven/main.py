@@ -27,6 +27,10 @@ class Robot:
         self.left_arm_position = init_left_position
 
     def move_motor(self, motorID):
+        while motorID < 0:
+            motorID += 12
+        while motorID >= 12:
+            motorID -= 12
         print("Moving motor " + str(motorID))
 
         # kit.servo[motorID].angle = ANGLE
@@ -40,6 +44,11 @@ class Robot:
         # Change the color of the key to green
 
     def release(self, motorID, duration, window, pitch):
+        while motorID < 0:
+            motorID += 12
+        while motorID >= 12:
+            motorID -= 12
+
         print("Returning motor " + str(motorID))
 
         window.canvas.itemconfig(str(int(pitch)) + "A", fill="white")
@@ -260,7 +269,9 @@ class PianoWindow(tk.Tk):
 def main():
     robot = Robot(get_keys(36, 85).index("C4"))
     # song = open_file("../data/twinkle.xml")
-    song = open_file("../BOThoven/difficult_test.xml")
+    # song = open_file("../BOThoven/difficult_test.xml")
+    # song = open_file("../data/fur_elise.mxl")
+    song = open_file("../data/one_octave.mxl")
     song = song.stripTies()
     song = song.voicesToParts()
 
