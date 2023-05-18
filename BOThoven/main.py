@@ -14,6 +14,8 @@ import time
 
 import tkinter as tk
 
+import tkinter.font as TkFont
+
 from tkinter import ttk
 
 BPM = 90
@@ -204,6 +206,7 @@ def playNotes(part, robot, window):
 
 
 class PianoWindow(tk.Tk):
+
     def __init__(self, startNote, endNote):
         super().__init__()
 
@@ -216,28 +219,41 @@ class PianoWindow(tk.Tk):
             if not key % 12 in [1, 3, 6, 8, 10]:
                 numWhiteKeys += 1
 
-        self.width = self.winfo_screenwidth()
-        self.height = self.winfo_screenheight()
+        self.width = int(self.winfo_screenwidth() / 2)
+        self.height =int(self.winfo_screenheight() / 3)
 
-        self.whiteKeyWidth = self.width * 0.02
-        self.whiteKeyHeight = self.height * 0.14
+        self.whiteKeyWidth = self.width * 0.0325
+        self.whiteKeyHeight = self.whiteKeyWidth * 4.5
 
         self.pianoWidth = numWhiteKeys * self.whiteKeyWidth
 
-        self.blackKeyWidth = self.width * 0.02 * (13.5 / 23.5)
+        self.blackKeyWidth = self.width * 0.0325 * (13.5 / 23.5)
         self.blackKeyHeight = self.blackKeyWidth * 5
 
         self.title("BOThoven UI")
+        offsetX = int((self.winfo_screenwidth() - self.width) / 2)
+        offsetY = int((self.winfo_screenheight() - self.height) / 2)
         self.geometry(
-            "{0}x{1}+0+0".format(self.width, self.height)
+            "{0}x{1}+{2}+{3}".format(self.width, self.height, offsetX, offsetY)
         )  # Set initial size and position
 
-        self.configure(bg="white")
+        self.configure(bg="#D3D3D3")
+
+        OptionFont = TkFont.Font(family="Sans Serif")
+        self.variable = tk.StringVar(self)
+        self.variable.set("Song 1")
+        self.values = ["Song 1", "Song 2", "Song 3", "Song 4"]
+        
+        self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
+        text = self.nametowidget(self.option_menu.menuname)
+        text.config(font=OptionFont)
+        self.option_menu.config(font=OptionFont)
+        self.option_menu.pack(padx=5, pady=5, side='top')  # Adjusted position to top left corner
 
         self.canvas = tk.Canvas(
             self,
-            width=self.winfo_screenwidth(),
-            height=self.winfo_screenheight(),
+            width=self.width,
+            height=self.height,
             bg="#D3D3D3",
         )
         self.canvas.pack()  # Fill and expand to fill the entire window
@@ -246,7 +262,7 @@ class PianoWindow(tk.Tk):
         self.keyWidth = 0
         self.keyHeight = 0
         self.xPos = (self.width - self.pianoWidth) / 2
-        self.yPos = (self.height * 3 / 4) - self.whiteKeyHeight
+        self.yPos = (self.height) - (self.whiteKeyHeight * 1.6)
 
         self.blackKeyPos = []
 
@@ -293,8 +309,7 @@ class PianoWindow(tk.Tk):
                     tags=str(key[1]) + "A",
                 )
                 
-        border_width = 5
-        corner_radius = 10        
+        border_width = 5       
         startX = (self.width - self.pianoWidth) / 2
         self.canvas.create_rectangle(
             startX,
@@ -310,18 +325,18 @@ def main():
     #song = open_file("../data/twinkle.xml")
     #song = open_file("../BOThoven/difficult_test.xml")
     #song = open_file("../data/fur_elise.mxl")
-    song = open_file("../data/one_octave.mxl")
-    song = song.stripTies()
-    song = song.voicesToParts()
+    #song = open_file("../data/one_octave.mxl")
 
     with ThreadPoolExecutor() as executor:
         window = PianoWindow(48, 84)
+        song = open_file("../data/fur_elise.mxl")
+        song = song.stripTies()
+        song = song.voicesToParts()
         for part in song:
             a = executor.submit(playNotes, part, robot, window)
-            #print(a.result())
         os.environ["TK_SILENCE_DEPRECATION"] = "1"
         os.environ["DISPLAY"] = ":0"
-        window.draw()
+        window.draw()        
         window.mainloop()
 
 
