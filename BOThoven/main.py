@@ -35,9 +35,7 @@ class Robot:
             motorID += 12
         while motorID >= 12:
             motorID -= 12
-        print("Moving motor " + str(motorID))
-
-        print("pressing" + str(int(motorID)) + "A")
+        # print("Moving motor " + str(motorID))
 
         if accidental == "natural":
             window.canvas.itemconfig(str(int(motorID + 60)) + "A", fill="#FFA32B")
@@ -60,9 +58,7 @@ class Robot:
         while motorID >= 12:
             motorID -= 12
 
-        print("Returning motor " + str(motorID))
-
-        print("releasing" + str(int(motorID)) + "A")
+        # print("Returning motor " + str(motorID))
 
         if accidental == "natural":
             window.canvas.itemconfig(str(int(motorID + 60)) + "A", fill="white")
@@ -70,10 +66,6 @@ class Robot:
             window.canvas.itemconfig(str(int(motorID + 60)) + "A", fill="black")
 
         # kit.servo[motorID].angle = 0
-
-    def translate(self, position):
-        self.left_arm_position = position
-        # print('moving to position', position)
 
 
 def open_file(xml_path, play_left_hand):
@@ -92,22 +84,17 @@ def get_keys(min_pitch, max_pitch):
 
     pitches = [str(p) for p in pitches]
 
-    print(pitches)
-
     return pitches
 
 
 def playNotes(part, robot, window):
     keys = get_keys(36, 85)
-    print(keys)
 
     beats = []
     for temp in part.recurse():
         beats.append(temp)
-        print(temp)
 
     for i, el in enumerate(beats):
-        print(el)
         if (
             i < len(beats) - 1
             and type(beats[i]) == stream.Measure
@@ -123,7 +110,6 @@ def playNotes(part, robot, window):
             continue
 
         if type(el) == note.Note:
-            print("sdlfksdflkjsdf", el.getGrace())
             if el.duration.isGrace:
                 continue
             pitch = el.pitch.ps
@@ -148,7 +134,7 @@ def playNotes(part, robot, window):
             time.sleep(0.075)
 
         if type(el) == chord.Chord:
-            print("playing chord")
+            print("Playing chord")
 
             for x in el._notes:
                 pitch = x.pitch.ps
@@ -180,8 +166,6 @@ def playNotes(part, robot, window):
             duration = el.duration.quarterLength * (60 / BPM)
             time.sleep(duration)
             print(f"Resting for {duration} seconds")
-
-    print("done")
 
 
 class PianoWindow(tk.Tk):
@@ -262,9 +246,6 @@ class PianoWindow(tk.Tk):
 
                 self.xPos += keyWidth
 
-        # for x in self.keyPos:
-        # print(x[1])
-
         for key in self.keyPos:
             if key[3] == "white":
                 self.canvas.create_rectangle(
@@ -303,10 +284,6 @@ class PianoWindow(tk.Tk):
 
 def main():
     robot = Robot(get_keys(36, 85).index("C4"))
-    # song = open_file("../data/twinkle.xml")
-    # song = open_file("../BOThoven/difficult_test.xml")
-    # song = open_file("../data/fur_elise.mxl")
-    # song = open_file("../data/one_octave.mxl")
 
     with ThreadPoolExecutor() as executor:
         window = PianoWindow(48, 84)
