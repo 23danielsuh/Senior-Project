@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./generators/transformers/Los-Angeles-Music-Composer"
+    ]
+}
