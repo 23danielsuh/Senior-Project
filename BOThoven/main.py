@@ -222,6 +222,9 @@ class PianoWindow(tk.Tk):
         self.width = int(self.winfo_screenwidth() / 2)
         self.height =int(self.winfo_screenheight() / 3)
 
+        print(self.winfo_screenwidth())
+        print(self.winfo_screenheight())
+
         self.whiteKeyWidth = self.width * 0.0325
         self.whiteKeyHeight = self.whiteKeyWidth * 4.5
 
@@ -233,22 +236,41 @@ class PianoWindow(tk.Tk):
         self.title("BOThoven UI")
         offsetX = int((self.winfo_screenwidth() - self.width) / 2)
         offsetY = int((self.winfo_screenheight() - self.height) / 2)
-        self.geometry(
-            "{0}x{1}+{2}+{3}".format(self.width, self.height, offsetX, offsetY)
-        )  # Set initial size and position
 
         self.configure(bg="#D3D3D3")
 
         OptionFont = TkFont.Font(family="Sans Serif")
         self.variable = tk.StringVar(self)
-        self.variable.set("Song 1")
-        self.values = ["Song 1", "Song 2", "Song 3", "Song 4"]
+        self.variable.set("Fur Elise")
+        self.values = ["Fur Elise", "Twinkle Twinkle Little Star", "Difficult Test", "One Octave"]
         
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
         text = self.nametowidget(self.option_menu.menuname)
         text.config(font=OptionFont)
         self.option_menu.config(font=OptionFont)
-        self.option_menu.pack(padx=5, pady=5, side='top')  # Adjusted position to top left corner
+        self.option_menu.config(bg="white", width=self.width)
+        self.option_menu.pack(padx=int(5 * (self.winfo_screenwidth() / 1440)), pady=int(5 * (self.winfo_screenheight() / 900)), side='top')  # Adjusted position to top left corner
+
+        button_frame = tk.Frame(self, bg="#D3D3D3")
+        button_frame.pack(side='top', pady=int(5 * (self.winfo_screenheight() / 900)))  # Buttons on the left side
+
+        button_text = ["Play Song", "Generate Music", "Import File"]
+        for text in button_text:
+            button = tk.Button(button_frame, text=text, font=OptionFont)
+            button.pack(side='left', ipady=int(5 * (self.winfo_screenheight() / 900)), padx=int(self.width * 0.01), ipadx=int(self.width * 0.05))
+            button.config(bg="white")
+
+        BPM_SPINBOX = tk.StringVar(self)
+        BPM_SPINBOX.set(90)
+
+        BPM_FRAME = tk.Frame(self, bg="#D3D3D3")
+        BPM_FRAME.pack(side='top', pady=int(5 * (self.winfo_screenheight() / 900)))
+
+        self.spinbox = tk.Spinbox(BPM_FRAME, from_=30, to=240, textvariable=BPM_SPINBOX, wrap=False)
+        self.spinbox.pack(side = 'right', padx=int(5 * (self.winfo_screenwidth() / 1440)), pady=int(5 * (self.winfo_screenheight() / 900)))
+
+        self.bpm_label = tk.Label(BPM_FRAME, text="BPM:", bg="#D3D3D3")
+        self.bpm_label.pack(side='left')
 
         self.canvas = tk.Canvas(
             self,
@@ -256,14 +278,22 @@ class PianoWindow(tk.Tk):
             height=self.height,
             bg="#D3D3D3",
         )
+
+        self.geometry(
+            "{0}x{1}+{2}+{3}".format(self.width, self.height, offsetX, offsetY)
+        ) 
+
         self.canvas.pack()  # Fill and expand to fill the entire window
+
+        
 
     def draw(self):
         self.keyWidth = 0
         self.keyHeight = 0
         self.xPos = (self.width - self.pianoWidth) / 2
-        self.yPos = (self.height) - (self.whiteKeyHeight * 1.6)
+        self.spinBoxBottom = self.spinbox.winfo_rooty() + self.spinbox.winfo_height()
 
+        self.yPos = ((self.height - self.spinBoxBottom - self.whiteKeyHeight) / 2)  - self.spinBoxBottom / 2
         self.blackKeyPos = []
 
         self.keyPos = []
