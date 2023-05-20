@@ -1,6 +1,5 @@
 .DS_Store
-data/
-generator/
+generators/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

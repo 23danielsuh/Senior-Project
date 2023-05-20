@@ -8,15 +8,14 @@ Install python + libraries (fix this later)
 
 ## Running the program
 
-To run the program, do ____ (fix this later)
+To run the program, do \_\_\_\_ (fix this later)
 
 ## Authors
 
-  - **Krish Mehra** - [Github](https://github.com/kmehra05) 
-  - **Ben Pomeranets** - [Github](https://github.com/benpomeranets)
-  - **Daniel Suh** - [Github](https://github.com/23danielsuh) 
-  - **Truman Williams**
+- **Ben Pomeranets** - [Github](https://github.com/benpomeranets)
+- **Daniel Suh** - [Github](https://github.com/23danielsuh)
+- **Truman Williams**
 
 ## Acknowledgments
 
-  - __
+- \_\_
