@@ -206,9 +206,6 @@ class PianoWindow(tk.Tk):
 
         self.variable.set("Fur Elise")
         self.values = ["Fur Elise", "Twinkle Twinkle Little Star", "Difficult Test", "One Octave"]
-        
-        self.variable.set("Song 1")
-        self.values = ["Song 1", "Song 2", "Song 3", "Song 4"]
 
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
         text = self.nametowidget(self.option_menu.menuname)
