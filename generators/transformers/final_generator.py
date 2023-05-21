@@ -18,14 +18,14 @@ full_path_to_custom_seed_MIDI (str): full path to midi/mxl file to generate musi
 number_of_batches_to_generate (int): how many generations to create (standard to use 1) [1, 16]
 temperature (float): temperature of generation (keep >=0.8 for interesting results) [0.1, 1]
 generator_sequence_length (int): how many sequences should eb created in the music [1, inf]
-number_of_prime_tokens (int): how many tokens to get from the midi file [126, 300, steps of 3]
+number_of_prime_tokens (int): how many tokens to get from the midi file [126, 3000, steps of 3]
 number_of_memory_tokens (int): transformer parameter (don't change probably) [402, 4095]
 """
-full_path_to_custom_seed_MIDI = "../../data/chopin_fantaisie_impromptu.mxl"
+full_path_to_custom_seed_MIDI = "../../data/bach_invention_13.mxl"
 number_of_batches_to_generate = 1
-temperature = 0.75
-generator_sequence_length = 512
-number_of_prime_tokens = 480
+temperature = 0.875
+generator_sequence_length = 1024
+number_of_prime_tokens = 1500
 number_of_memory_tokens = 4095
 
 # ============ DON'T CHANGE ANYTHING BELOW THIS POINT ============
@@ -413,14 +413,7 @@ if len(melody_chords_f) != 0:
         list_of_MIDI_patches=[0, 24, 32, 40, 42, 46, 56, 71, 73, 0, 53, 19, 0, 0, 0, 0],
         number_of_ticks_per_quarter=500,
     )
-    print("=" * 70)
-    print("Displaying resulting composition...")
-    print("=" * 70)
 
     fname = "Los-Angeles-Music-Composer-Music-Composition"
-
-    x = []
-    y = []
-    c = []
 
 print("Done!")

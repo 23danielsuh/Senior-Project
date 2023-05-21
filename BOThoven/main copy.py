@@ -170,27 +170,18 @@ def playNotes(part, robot, window):
 
 def playSong():
     robot = Robot(get_keys(36, 85).index("C4"))
-
-    d = {
-        "Fur Elise": "../data/beethoven_fur_elise.mxl",
-        "Twinkle Twinkle Little Star": "../data/mozart_twinkle.mxl",
-        "Difficult Test": "../data/test_difficult.mxl",
-        "One Octave": "../data/test_one_octave.mxl",
-    }
-
-    song = open_file(d[window.get_selected_song()], True)
-    global BPM
-    BPM = int(window.get_selected_bpm())
+    # song = open_file("../data/beethoven_fur_elise.mxl", True)
+    song = open_file(
+        "/Users/danielsuh/code/senior_project/data/beethoven_fur_elise.mxl", True
+    )
     song = song.stripTies()
     song = song.voicesToParts()
+
+    window = PianoWindow(48, 84)
 
     with ThreadPoolExecutor() as executor:
         for part in song:
             a = executor.submit(playNotes, part, robot, window)
-        os.environ["TK_SILENCE_DEPRECATION"] = "1"
-        os.environ["DISPLAY"] = ":0"
-        window.draw()
-        window.mainloop()
 
 
 class PianoWindow(tk.Tk):
@@ -242,7 +233,7 @@ class PianoWindow(tk.Tk):
         text.config(font=OptionFont)
         self.option_menu.config(font=OptionFont)
 
-        self.option_menu.config(width=self.width)
+        self.option_menu.config(bg="white", width=self.width)
         self.option_menu.pack(
             padx=int(5 * (self.winfo_screenwidth() / 1440)),
             pady=int(5 * (self.winfo_screenheight() / 900)),
@@ -272,14 +263,14 @@ class PianoWindow(tk.Tk):
             )
             button.config(bg="white")
 
-        self.BPM_SPINBOX = tk.StringVar(self)
-        self.BPM_SPINBOX.set(90)
+        BPM_SPINBOX = tk.StringVar(self)
+        BPM_SPINBOX.set(90)
 
         BPM_FRAME = tk.Frame(self, bg="#D3D3D3")
         BPM_FRAME.pack(side="top", pady=int(5 * (self.winfo_screenheight() / 900)))
 
         self.spinbox = tk.Spinbox(
-            BPM_FRAME, from_=30, to=240, textvariable=self.BPM_SPINBOX, wrap=False
+            BPM_FRAME, from_=30, to=240, textvariable=BPM_SPINBOX, wrap=False
         )
         self.spinbox.pack(
             side="right",
@@ -369,21 +360,13 @@ class PianoWindow(tk.Tk):
             outline="black",
         )
 
-    def get_selected_song(self):
-        return self.variable.get()
-
-    def get_selected_bpm(self):
-        return self.BPM_SPINBOX.get()
-
-
-window = PianoWindow(48, 84)
-
 
 def main():
-    os.environ["TK_SILENCE_DEPRECATION"] = "1"
-    os.environ["DISPLAY"] = ":0"
-    window.draw()
-    window.mainloop()
+    # os.environ["TK_SILENCE_DEPRECATION"] = "1"
+    # os.environ["DISPLAY"] = ":0"
+    # window.draw()
+    # window.mainloop()
+    playSong()
 
 
 if __name__ == "__main__":
