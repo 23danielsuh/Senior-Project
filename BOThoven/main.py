@@ -187,9 +187,9 @@ def playSong():
     with ThreadPoolExecutor() as executor:
         for part in song:
             a = executor.submit(playNotes, part, robot, window)
-        os.environ["TK_SILENCE_DEPRECATION"] = "1"
-        os.environ["DISPLAY"] = ":0"
-        window.draw()
+        # os.environ["TK_SILENCE_DEPRECATION"] = "1"
+        # os.environ["DISPLAY"] = ":0"
+        # window.draw()
         window.mainloop()
 
 
