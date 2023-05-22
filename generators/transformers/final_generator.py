@@ -21,15 +21,15 @@ generator_sequence_length (int): how many sequences should eb created in the mus
 number_of_prime_tokens (int): how many tokens to get from the midi file [126, 3000, steps of 3]
 number_of_memory_tokens (int): transformer parameter (don't change probably) [402, 4095]
 """
-full_path_to_custom_seed_MIDI = "../../data/bach_invention_13.mxl"
+full_path_to_custom_seed_MIDI = "../../data/beethoven_fur_elise.midi"
 number_of_batches_to_generate = 1
 temperature = 0.875
-generator_sequence_length = 1024
+generator_sequence_length = 520
 number_of_prime_tokens = 1500
 number_of_memory_tokens = 4095
 
 # ============ DON'T CHANGE ANYTHING BELOW THIS POINT ============
-if "mxl" in full_path_to_custom_seed_MIDI:
+if "mxl" in full_path_to_custom_seed_MIDI or "midi" in full_path_to_custom_seed_MIDI:
     print(
         "If you receive an error here, your XML file is corrupted, download another version of the piece or just download the actual midi file"
     )
