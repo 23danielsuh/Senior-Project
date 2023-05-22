@@ -24,6 +24,7 @@ BPM = 90
 ANGLE = 30
 selected_file = "../data/beethoven_fur_elise.mxl"
 d = {}
+name_of_song = None
 
 
 class Robot:
@@ -189,7 +190,7 @@ def playSong():
         "Happy Birthday": "../data/happy_birthday.mxl",
         "Canon in D": "../data/pachelbel_canon_d.mxl",
     }
-    d[selected_file] = selected_file
+    d[name_of_song] = selected_file
     print(d)
 
     print(window.get_selected_LH_bool())
@@ -218,7 +219,10 @@ def browseFiles():
     selected_file = filename
 
     print(selected_file)
-    window.append_song(selected_file)
+
+    global name_of_song
+    name_of_song = tk.simpledialog.askstring("Song name", "Song name:")
+    window.append_song(name_of_song)
 
     window.option_menu.option_add(selected_file, selected_file)
 
