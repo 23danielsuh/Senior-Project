@@ -15,11 +15,15 @@ import time
 import tkinter as tk
 
 import tkinter.font as TkFont
+from tkinter import filedialog
+from tkinter import *
 
 from tkinter import ttk
 
 BPM = 90
 ANGLE = 30
+selected_file = "../data/beethoven_fur_elise.mxl"
+d = {}
 
 
 class Robot:
@@ -171,6 +175,7 @@ def playNotes(part, robot, window):
 def playSong():
     robot = Robot(get_keys(36, 85).index("C4"))
 
+    global d
     d = {
         "Fur Elise": "../data/beethoven_fur_elise.mxl",
         "Twinkle Twinkle Little Star": "../data/mozart_twinkle.mxl",
@@ -182,9 +187,10 @@ def playSong():
         "Turkish March": "../data/mozart_turkish_march",
         "Mary Had a Little Lamb": "../data/mary_had_a_little_lamb.mxl",
         "Happy Birthday": "../data/happy_birthday.mxl",
-        "Canon in D": "../data/pachelbel_canon_d.mxl"
-        
+        "Canon in D": "../data/pachelbel_canon_d.mxl",
     }
+    d[selected_file] = selected_file
+    print(d)
 
     print(window.get_selected_LH_bool())
     song = open_file(d[window.get_selected_song()], window.get_selected_LH_bool())
@@ -200,6 +206,21 @@ def playSong():
         # os.environ["DISPLAY"] = ":0"
         # window.draw()
         window.mainloop()
+
+
+def browseFiles():
+    filename = filedialog.askopenfilename(
+        initialdir="./",
+        title="Select a File",
+        filetypes=(("Music files", "*.mid *.midi *.mxl *.xml"), ("all files", "*.*")),
+    )
+    global selected_file
+    selected_file = filename
+
+    print(selected_file)
+    window.append_song(selected_file)
+
+    window.option_menu.option_add(selected_file, selected_file)
 
 
 class PianoWindow(tk.Tk):
@@ -250,7 +271,7 @@ class PianoWindow(tk.Tk):
             "Turkish March",
             "Mary Had a Little Lamb",
             "Happy Birthday",
-            "Canon in D"
+            "Canon in D",
         ]
 
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
@@ -280,6 +301,11 @@ class PianoWindow(tk.Tk):
                     font=OptionFont,
                     command=playSong,
                 )
+
+            if text == "Import File":
+                button = tk.Button(
+                    button_frame, text=text, font=OptionFont, command=browseFiles
+                )
             button.pack(
                 side="left",
                 ipady=int(5 * (self.winfo_screenheight() / 900)),
@@ -297,13 +323,14 @@ class PianoWindow(tk.Tk):
         self.spinbox = tk.Spinbox(
             BPM_FRAME, from_=30, to=240, textvariable=self.BPM_SPINBOX, wrap=False
         )
-        
+
         self.LH = tk.BooleanVar(self)
-        
-        self.LH_radio = tk.Checkbutton(BPM_FRAME, text="Both Hands", variable=self.LH, bg="#D3D3D3")
+
+        self.LH_radio = tk.Checkbutton(
+            BPM_FRAME, text="Both Hands", variable=self.LH, bg="#D3D3D3"
+        )
         self.LH_radio.pack(side="right")
-        
-        
+
         self.spinbox.pack(
             side="right",
             padx=int(5 * (self.winfo_screenwidth() / 1440)),
@@ -312,7 +339,6 @@ class PianoWindow(tk.Tk):
 
         self.bpm_label = tk.Label(BPM_FRAME, text="BPM:", bg="#D3D3D3")
         self.bpm_label.pack(side="left")
-        
 
         self.option_menu.pack(
             padx=5, pady=5, side="top"
@@ -393,14 +419,43 @@ class PianoWindow(tk.Tk):
             outline="black",
         )
 
+        # OptionFont = TkFont.Font(family="Sans Serif")
+
+        # self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
+        # text = self.nametowidget(self.option_menu.menuname)
+        # text.config(font=OptionFont)
+        # self.option_menu.config(font=OptionFont)
+
+        # self.option_menu.config(width=self.width)
+        # self.option_menu.pack(
+        #     padx=int(500 * (self.winfo_screenwidth() / 1440)),
+        #     pady=int(5 * (self.winfo_screenheight() / 900)),
+        #     side="top",
+        # )  # Adjusted position to top left corner
+
+        # self.option_menu.pack(
+        #     padx=5, pady=5, side="top"
+        # )  # Adjusted position to top left corner
+
     def get_selected_song(self):
         return self.variable.get()
 
     def get_selected_bpm(self):
         return self.BPM_SPINBOX.get()
-        
+
     def get_selected_LH_bool(self):
         return self.LH.get()
+
+    # def append_song(self, path):
+    #     self.values.append(path)
+
+    def append_song(self, path):
+        self.values.append(path)
+        self.option_menu["menu"].delete(0, "end")
+        for option in self.values:
+            self.option_menu["menu"].add_command(
+                label=option, command=tk._setit(self.variable, option)
+            )
 
 
 window = PianoWindow(48, 84)
