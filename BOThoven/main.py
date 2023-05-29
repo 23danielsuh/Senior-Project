@@ -23,7 +23,7 @@ from tkinter import ttk
 
 BPM = 90
 ANGLE = 30
-selected_file = "../data/beethoven_fur_elise.mxl" 
+selected_file = "../data/beethoven_fur_elise.mxl"
 d = {}
 name_of_song = None
 
@@ -47,11 +47,10 @@ class Robot:
         kit.servo[8].angle = 4
         kit.servo[10].angle = 1
 
-        
-        #for i in range(0, 6):
+        # for i in range(0, 6):
         #    kit.servo[i].angle = ANGLE
-            
-        #for i in range(6, 12):
+
+        # for i in range(6, 12):
         #    kit.servo[i].angle = 0
         self.left_arm_position = init_left_position
 
@@ -67,41 +66,41 @@ class Robot:
         else:
             window.canvas.itemconfig(str(int(motorID + 60)) + "A", fill="#C03A38")
 
-        #print('made it here')
-        
+        # print('made it here')
+
         if motorID == 0:
             kit.servo[0].angle = 0
         if motorID == 2:
-            kit.servo[2].angle = 16-10
+            kit.servo[2].angle = 16 - 10
         if motorID == 4:
-            kit.servo[4].angle = 21-10
+            kit.servo[4].angle = 21 - 10
         if motorID == 5:
-            kit.servo[5].angle = 18-10
+            kit.servo[5].angle = 18 - 10
         if motorID == 7:
-            kit.servo[7].angle = 22+10
+            kit.servo[7].angle = 22 + 10
         if motorID == 9:
-            kit.servo[9].angle = 36+10
+            kit.servo[9].angle = 36 + 10
         if motorID == 11:
-            kit.servo[11].angle = 39+10
+            kit.servo[11].angle = 39 + 10
         if motorID == 1:
-            kit.servo[1].angle = 25-10
+            kit.servo[1].angle = 25 - 10
         if motorID == 3:
-            kit.servo[3].angle = 20-10
+            kit.servo[3].angle = 20 - 10
         if motorID == 6:
-            kit.servo[6].angle = 30+10
+            kit.servo[6].angle = 30 + 10
         if motorID == 8:
-            kit.servo[8].angle = 19+10
+            kit.servo[8].angle = 19 + 10
         if motorID == 10:
-            kit.servo[10].angle = 16+10
-        
-        #if motorID >= 0 and motorID <= 5:
+            kit.servo[10].angle = 16 + 10
+
+        # if motorID >= 0 and motorID <= 5:
         #    kit.servo[int(motorID)].angle = 0
-        #else:
+        # else:
         #    kit.servo[int(motorID)].angle = ANGLE
 
-        #print(type(motorID))
-        #print(motorID)
-        #kit.servo[motorID].angle = ANGLE
+        # print(type(motorID))
+        # print(motorID)
+        # kit.servo[motorID].angle = ANGLE
 
     def play_note(self, note, window, accidental):
         self.move_motor(note, accidental, window)
@@ -124,8 +123,8 @@ class Robot:
         else:
             window.canvas.itemconfig(str(int(motorID + 60)) + "A", fill="black")
 
-        #kit.servo[motorID].angle = 0
-        
+        # kit.servo[motorID].angle = 0
+
         if motorID == 0:
             kit.servo[0].angle = 31
         if motorID == 2:
@@ -150,12 +149,11 @@ class Robot:
             kit.servo[8].angle = 4
         if motorID == 10:
             kit.servo[10].angle = 1
-        
-        #if motorID >= 0 and motorID <= 5:
-        #    kit.servo[int(motorID)].angle = ANGLE
-        #else:
-        #    kit.servo[int(motorID)].angle = 0
 
+        # if motorID >= 0 and motorID <= 5:
+        #    kit.servo[int(motorID)].angle = ANGLE
+        # else:
+        #    kit.servo[int(motorID)].angle = 0
 
 
 def open_file(xml_path, play_left_hand):
@@ -274,7 +272,18 @@ def playSong():
         "Mary Had a Little Lamb": "../data/mary_had_a_little_lamb.mxl",
         "Happy Birthday": "../data/happy_birthday.mxl",
         "Canon in D": "../data/pachelbel_canon_d.mxl",
-        "Invention 13": "../data/bach_invention_13.mxl"
+        "Invention 13": "../data/bach_invention_13.mxl",
+        "All of me": "../data/all_of_me.mxl",
+        "Clocks": "../data/clocks.mxl",
+        "Entertainer": "../data/entertainer.mxl",
+        "Flight of the Bumblebee": "../data/flight_of_the_bumblebee.mxl",
+        "Game of Thrones": "../data/game_of_thrones.mxl",
+        "Liebestraum": "../data/liebestraum.mxl",
+        "Maple Leaf Rag": "../data/maple_leaf_rag.mxl",
+        "Piano Man": "../data/piano_man.mxl",
+        "Still Dre": "../data/still_dre.mxl",
+        "Subwoofer Lullaby": "../data/subwoofer_lullaby.mxl",
+        "Sweden": "../data/sweden.mxl",
     }
     d[name_of_song] = selected_file
     print(d)
@@ -362,7 +371,18 @@ class PianoWindow(tk.Tk):
             "Mary Had a Little Lamb",
             "Happy Birthday",
             "Canon in D",
-            "Invention 13"
+            "Invention 13",
+            "All of me",
+            "Clocks",
+            "Entertainer",
+            "Flight of the Bumblebee",
+            "Game of Thrones",
+            "Liebestraum",
+            "Maple Leaf Rag",
+            "Piano Man",
+            "Still Dre",
+            "Subwoofer Lullaby",
+            "Sweden",
         ]
 
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
