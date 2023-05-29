@@ -284,6 +284,8 @@ def playSong():
         "Still Dre": "../data/still_dre.mxl",
         "Subwoofer Lullaby": "../data/subwoofer_lullaby.mxl",
         "Sweden": "../data/sweden.mxl",
+        "Runaway": "../data/runaway.mxl",
+        "Pure Imagination": "../data/pure_imagination.mxl",
     }
     d[name_of_song] = selected_file
     print(d)
@@ -383,6 +385,8 @@ class PianoWindow(tk.Tk):
             "Still Dre",
             "Subwoofer Lullaby",
             "Sweden",
+            "Runaway",
+            "Pure Imagination",
         ]
 
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
