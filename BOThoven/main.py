@@ -273,7 +273,7 @@ def playSong():
         "Happy Birthday": "../data/happy_birthday.mxl",
         "Canon in D": "../data/pachelbel_canon_d.mxl",
         "Invention 13": "../data/bach_invention_13.mxl",
-        "All of me": "../data/all_of_me.mxl",
+        "All of me": "../data/all_of_me.midi",
         "Clocks": "../data/clocks.mxl",
         "Entertainer": "../data/entertainer.mxl",
         "Flight of the Bumblebee": "../data/flight_of_the_bumblebee.mxl",
