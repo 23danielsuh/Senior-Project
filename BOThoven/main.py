@@ -286,6 +286,7 @@ def playSong():
         "Sweden": "../data/sweden.mxl",
         "Runaway": "../data/runaway.mxl",
         "Pure Imagination": "../data/pure_imagination.mxl",
+        "Disney Up Theme": "../data/disney_up_theme.midi",
     }
     d[name_of_song] = selected_file
     print(d)
@@ -387,6 +388,7 @@ class PianoWindow(tk.Tk):
             "Sweden",
             "Runaway",
             "Pure Imagination",
+            "Disney Up Theme",
         ]
 
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
