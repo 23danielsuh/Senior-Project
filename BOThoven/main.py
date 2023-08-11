@@ -34,7 +34,7 @@ class Robot:
     right_arm_position = 0
 
     def __init__(self, init_left_position):
-        kit.servo[0].angle = 31
+        kit.servo[0].angle = 52
         kit.servo[2].angle = 38
         kit.servo[4].angle = 43
         kit.servo[5].angle = 40
@@ -69,7 +69,7 @@ class Robot:
         # print('made it here')
 
         if motorID == 0:
-            kit.servo[0].angle = 0
+            kit.servo[0].angle = 25
         if motorID == 2:
             kit.servo[2].angle = 16 - 10
         if motorID == 4:
@@ -126,7 +126,7 @@ class Robot:
         # kit.servo[motorID].angle = 0
 
         if motorID == 0:
-            kit.servo[0].angle = 31
+            kit.servo[0].angle = 52
         if motorID == 2:
             kit.servo[2].angle = 38
         if motorID == 4:
@@ -144,7 +144,7 @@ class Robot:
         if motorID == 3:
             kit.servo[3].angle = 35
         if motorID == 6:
-            kit.servo[6].angle = 25
+            kit.servo[6].angle = 15
         if motorID == 8:
             kit.servo[8].angle = 4
         if motorID == 10:
@@ -160,7 +160,7 @@ def open_file(xml_path, play_left_hand):
     file = converter.parse(xml_path)
 
     if play_left_hand:
-        return file
+        return file.getElementsByClass(stream.Part)[1]
     else:
         return file.getElementsByClass(stream.Part)[0]
 
@@ -236,7 +236,7 @@ def playNotes(part, robot, window):
 
                 robot.play_note(pitch - 60, window, accidental)
 
-            time.sleep(max(0, duration - 0.075))
+            time.sleep(max(0, duration - 0.125))
 
             for x in el._notes:
                 pitch = x.pitch.ps
@@ -248,7 +248,7 @@ def playNotes(part, robot, window):
 
                 robot.release(x.pitch.ps - 60, duration, window, x.pitch.ps, accidental)
 
-            time.sleep(0.075)
+            time.sleep(0.125)
 
         elif type(el) == note.Rest:
             duration = el.duration.quarterLength * (60 / BPM)
@@ -287,6 +287,9 @@ def playSong():
         "Runaway": "../data/runaway.mxl",
         "Pure Imagination": "../data/pure_imagination.mxl",
         "Disney Up Theme": "../data/disney_up_theme.midi",
+        "Ode to Joy": "../data/ode_to_joy.midi",
+        "Imagine": "../data/imagine.mxl",
+        "OLEO": "../data/oleo.mxl",
     }
     d[name_of_song] = selected_file
     print(d)
@@ -389,6 +392,9 @@ class PianoWindow(tk.Tk):
             "Runaway",
             "Pure Imagination",
             "Disney Up Theme",
+            "Ode to Joy",
+            "Imagine",
+            "OLEO",
         ]
 
         self.option_menu = tk.OptionMenu(self, self.variable, *self.values)
